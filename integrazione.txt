@@ -1,0 +1,14 @@
+['Risk 1 (High)' 'Risk 2 (Medium)' 'Risk 3 (Low)' 'Not yet graded']
+
+NEW YORK
+stampare tabella con score più alto per ogni valore di GRADE
+Se score nan 'not yet graded'
+creare tabella nuova new york con grade corretti alto medio basso
+
+LOS ANGELES
+sostituzione grade con alto C, medio B, basso A
+se grade '' sostituire con 'not yet graded'
+
+CHICAGO
+sostuire 'All' in Risk con 'not yet graded'
+
