@@ -32,7 +32,7 @@ def eliminate_rows():
 
 def data_visualization():
   #pd.set_option('display.max_rows', None)
-  ny = pd.read_csv("/content/drive/MyDrive/datasetbd2/DOHMH_New_York_City_Restaurant_Inspection_Results.csv", sep=',')
+  """ny = pd.read_csv("/content/drive/MyDrive/datasetbd2/DOHMH_New_York_City_Restaurant_Inspection_Results.csv", sep=',')
   table = pd.DataFrame(columns = ['grade', 'min_score', 'max_score'])
   grades = ny['GRADE'].unique()
   for grade in grades:
@@ -43,10 +43,14 @@ def data_visualization():
     table.loc[-1] = [grade, min_value, max_value]
     table.index+=1
     #if grade == 'C':
-    #  print(column)
+    #  print(column)"""
 
-  pd.set_option('display.max_columns', 5)
-  print(table)
+  
+  ch = pd.read_csv("/content/drive/MyDrive/datasetbd2/chicago_new.csv")
+  pd.set_option('display.max_columns', 20)
+  #print(ch.sort_values(by = 'DBA Name')[['Inspection ID', 'DBA Name', 'License #', 'Inspection Date',  'Violations']])
+  print(ch.duplicated(subset = ['DBA Name', 'Inspection Date']).value_counts())
+  #print(table)
 
 
 
