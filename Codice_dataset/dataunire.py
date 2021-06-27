@@ -1,6 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 import numpy as np
+import os
 
 
 
@@ -55,7 +56,7 @@ def data_visualization():
 
 
 
-def union_newyork(df):
+def union_newyork(df_old):
   ny = pd.read_csv("/content/drive/MyDrive/datasetbd2/DOHMH_New_York_City_Restaurant_Inspection_Results.csv", sep=',')
   grades = {
     'A': 'Risk 3 (Low)',
@@ -65,8 +66,12 @@ def union_newyork(df):
     'Z': 'Not Yet Graded',
     'P': 'Not Yet Graded'
   }
+  columns = ['name', 'address', 'city', 'zipcode', 'phone', 'type', 'cuisine_description',
+    'inspection_date', 'violation', 'risk']
+  df = pd.DataFrame(columns = columns)
   ny = ny.where(pd.notnull(ny), None)
-
+  ny = ny.loc[50001:100000,:]
+  #399918
   for i, row in tqdm(ny.iterrows()):
     new_row = []
     new_row.append(row['DBA'])
@@ -87,7 +92,9 @@ def union_newyork(df):
     df.index+=1
 
   print(df)
+  df = pd.concat([df_old, df])
   df.to_csv("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", index = False)
+
   return df
 
 
@@ -96,7 +103,12 @@ if __name__=='__main__':
   #data_visualization()
   columns = ['name', 'address', 'city', 'zipcode', 'phone', 'type', 'cuisine_description',
     'inspection_date', 'violation', 'risk']
-  df = pd.DataFrame(columns = columns)
+  if os.path.isfile("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv"):
+    df = pd.read_csv("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv")
+  else:
+    df = pd.DataFrame(columns = columns)
+  print(df.shape)
   df = union_newyork(df)
+  print(df.shape)
 
 
