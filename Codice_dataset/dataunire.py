@@ -144,7 +144,7 @@ def union_chicago(df_old, columns):
     ' ': 'Not Yet Graded'
   }
   chicago = chicago.where(pd.notnull(chicago), None)
-  chicago = chicago.loc[30001:65000, :]
+  chicago = chicago.loc[0:30000, :]
   #105272
   df = pd.DataFrame(columns = columns)
   
@@ -158,7 +158,7 @@ def union_chicago(df_old, columns):
     restaurant_type = row['Facility Type'] if row['Facility Type'] is not None else np.nan
     new_row.append(restaurant_type) 
     new_row.append(np.nan)
-    new_row.append('Inspection Date')
+    new_row.append(row['Inspection Date'])
     violation_description = row['Violations'] if row['Violations'] is not None else np.nan
     new_row.append(violation_description)
     new_row.append(grades[row['Risk']])
