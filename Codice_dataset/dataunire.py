@@ -118,7 +118,7 @@ def union_la(df_old, columns):
     new_row.append(np.nan)
     new_row.append(np.nan)
     new_row.append(np.nan)
-    new_row.append('activity_date')
+    new_row.append(row['activity_date'])
     violation_description = la_violations.loc[la_violations['serial_number'] == row['serial_number']]
     new_row.append(violation_description)
     new_row.append(grades[row['grade']])
@@ -144,7 +144,7 @@ def union_chicago(df_old, columns):
     ' ': 'Not Yet Graded'
   }
   chicago = chicago.where(pd.notnull(chicago), None)
-  chicago = chicago.loc[0:30000, :]
+  chicago = chicago.loc[65001:105272, :]
   #105272
   df = pd.DataFrame(columns = columns)
   
@@ -161,7 +161,7 @@ def union_chicago(df_old, columns):
     new_row.append(row['Inspection Date'])
     violation_description = row['Violations'] if row['Violations'] is not None else np.nan
     new_row.append(violation_description)
-    new_row.append(grades[row['Risk']])
+    new_row.append(grades[row['Risk']]) if row['Risk'] is not None else new_row.append(np.nan)
     df.loc[-1]=new_row
     df.index+=1
 
