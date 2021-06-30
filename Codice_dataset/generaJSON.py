@@ -32,7 +32,7 @@ class RestaurantEncoder(JSONEncoder):
 
 
 def read_file(filename):
-  df = pd.read_csv(filename)[:20,:]
+  df = pd.read_csv(filename)
   df = df.sort_values(by = ['name', 'address', 'inspection_date'])
   restaurants = []
   df = df.where(pd.notnull(df), None)
@@ -57,9 +57,13 @@ def read_file(filename):
 
 
 if __name__ == '__main__':
-  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all_chicago.csv")
+  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv")
+  x = json.dumps(l, indent=4, cls = RestaurantEncoder)
 
-  print(json.dumps(l, indent=4, cls = RestaurantEncoder))
+  f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
+  f.write(x)
+  f.close()
+  #print(json.dumps(l, indent=4, cls = RestaurantEncoder))
 
 
 
