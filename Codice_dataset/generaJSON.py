@@ -28,6 +28,9 @@ class Restaurant:
 
 class RestaurantEncoder(JSONEncoder):
   def default(self, o):
+    for key, value in list(o.__dict__.items()):
+      if value is None:
+        del o.__dict__[key]
     return o.__dict__
 
 
@@ -59,7 +62,7 @@ def read_file(filename):
 if __name__ == '__main__':
   l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv")
   x = json.dumps(l, indent=4, cls = RestaurantEncoder)
-
+  print(x)
   f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
   f.write(x)
   f.close()
