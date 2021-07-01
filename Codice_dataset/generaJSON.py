@@ -12,7 +12,7 @@ class Inspection:
   
 
 class Restaurant:
-  def __init__(self, name, address, city, zipcode, cuisine_description, restaurant_type, phone):
+  def __init__(self, name, address, city, zipcode, cuisine_description, restaurant_type, phone, state):
     self.name = name
     self.address = address
     self.city = city
@@ -20,6 +20,7 @@ class Restaurant:
     self.cuisine_description = cuisine_description
     self.restaurant_type = restaurant_type
     self.phone = phone
+    self.state = state
     self.violations = []
   
   def add_violation(self, violation):
@@ -34,7 +35,7 @@ class RestaurantEncoder(JSONEncoder):
     return o.__dict__
 
 
-def read_file(filename):
+def read_file(filename, state):
   df = pd.read_csv(filename)
   df = df.sort_values(by = ['name', 'address', 'inspection_date'])
   restaurants = []
@@ -48,8 +49,8 @@ def read_file(filename):
       zipcode = row['zipcode']
       cuisine_description = row['cuisine_description']
       restaurant_type = row['type']
-      phone = row['phone'] 
-      restaurant = Restaurant(name, address, city, zipcode, cuisine_description, restaurant_type, phone)
+      phone = row['phone']
+      restaurant = Restaurant(name, address, city, zipcode, cuisine_description, restaurant_type, phone, state)
       restaurants.append(restaurant)
     date = row['inspection_date']
     violation = row['violation']
@@ -60,7 +61,7 @@ def read_file(filename):
 
 
 if __name__ == '__main__':
-  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv")
+  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", "Ney York")
   x = json.dumps(l, indent=4, cls = RestaurantEncoder)
   print(x)
   f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
