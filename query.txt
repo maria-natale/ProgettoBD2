@@ -24,13 +24,14 @@ for (i in states){
 	db.ristoranti.find({state: s}).limit(1);
 }
 
-
+###FUNZIONA
 var states = db.ristoranti.distinct('state')
 results = []
 for (i in states){
 	s = states[i]
 	print(s)
-	results.push(db.ristoranti.find({state: s}, {name:1, state:1}).limit(1));
+	print("tette")
+	results.push(db.ristoranti.find({state: s}, {name:1, state:1}).limit(10).toArray());
 }
 print(results)
 
