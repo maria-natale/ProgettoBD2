@@ -1,0 +1,30 @@
+db.Ristoranti.aggregate([
+  {
+    "$addFields": {
+      "violations": {
+        "$map": {
+          "input": "$violations",
+          "in": {
+            "$mergeObjects": [
+              "$$this",
+              {
+                "inspection_date": {
+                  "$dateFromString": {
+                    "dateString": "$$this.inspection_date",
+                    "format": "%Y-%m-%d",
+                    "onError": null,
+                    "onNull": null
+                  }
+                }
+              }
+            ],
+            
+          },
+          
+        }
+      }
+    }
+  },
+  { $merge : { into : "ristoranti" } }
+
+])

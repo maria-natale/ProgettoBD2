@@ -68,12 +68,15 @@ if __name__ == '__main__':
   f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
   f.write(x)
   f.close()"""
-  filename= "C:/Users/maria/Downloads/json/la.json"
+  filename= "/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago.json"
 
   with open (filename, 'r' ) as f:
     content = f.read()
-    content_new = re.sub('(\d{4})-(\d{2})-(\d{2})', r'\3/\2/\1', "2020-02-12", flags = re.M)
+    content_new = re.sub('(\d{2})/(\d{2})/(\d{4})', r'\3-\1-\2', content, flags = re.M)
     print(content_new)
+    f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago_datenew.json", 'w')
+    f.write(content_new)
+    f.close()
     #print(content)
   #print(json.dumps(l, indent=4, cls = RestaurantEncoder))
 

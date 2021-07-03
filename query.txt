@@ -1,0 +1,19 @@
+Cerca ristorante per nome
+db.ristoranti.find({name: '#1 BUFFET'})
+db.ristoranti.find({name: /^BUFF/}) iniziano per BUFF
+
+
+Cerca ristoranti per Stato
+db.ristoranti.find({state: 'California'})
+
+Prendi i primi 10 ristoranti per ogni stato con rischio basso
+
+db.ristoranti.find({state: 'California', ''}).limit(10)
+
+Cerca ristorante per stato, città, rischio 
+db.ristoranti.find({state: 'California', city: 'LOS ANGELES'}).limit(2)
+Cerca ristorante per nome, ordine per 
+
+for var in (db.ristoranti.distinct('state')){ 
+	db.ristoranti.find({state: var}).limit(1)
+}
