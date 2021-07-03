@@ -2,6 +2,7 @@ import pandas as pd
 import json
 from json import JSONEncoder
 import codecs
+import re
 
 class Inspection:
   def __init__(self, inspection_data, description, risk):
@@ -61,12 +62,19 @@ def read_file(filename, state):
 
 
 if __name__ == '__main__':
-  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", "Ney York")
+  """l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", "Ney York")
   x = json.dumps(l, indent=4, cls = RestaurantEncoder)
   print(x)
   f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
   f.write(x)
-  f.close()
+  f.close()"""
+  filename= "C:/Users/maria/Downloads/json/la.json"
+
+  with open (filename, 'r' ) as f:
+    content = f.read()
+    content_new = re.sub('(\d{4})-(\d{2})-(\d{2})', r'\3/\2/\1', "2020-02-12", flags = re.M)
+    print(content_new)
+    #print(content)
   #print(json.dumps(l, indent=4, cls = RestaurantEncoder))
 
 
