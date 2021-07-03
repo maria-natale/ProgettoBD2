@@ -11,9 +11,7 @@ db.Ristoranti.aggregate([
                 "inspection_date": {
                   "$dateFromString": {
                     "dateString": "$$this.inspection_date",
-                    "format": "%Y-%m-%d",
-                    "onError": null,
-                    "onNull": null
+                    "format": "%Y-%m-%d"
                   }
                 }
               }
