@@ -3,6 +3,7 @@ import json
 from json import JSONEncoder
 import codecs
 import re
+import datetime, calendar
 
 class Inspection:
   def __init__(self, inspection_data, description, risk):
@@ -22,11 +23,14 @@ class Restaurant:
     self.restaurant_type = restaurant_type
     self.phone = phone
     self.state = state
+    self.rischio = None
     self.violations = []
   
   def add_violation(self, violation):
     self.violations.append(violation)
   
+  def add_rischio(self, rischio):
+    self.rischio=rischio
 
 class RestaurantEncoder(JSONEncoder):
   def default(self, o):
@@ -57,20 +61,23 @@ def read_file(filename, state):
     violation = row['violation']
     risk = row['risk']
     restaurants[len(restaurants)-1].add_violation(Inspection(date, violation, risk))
+    restaurant.violations.sort(key=lambda r: datetime.datetime.strptime(r.inspection_date, "%m/%d/%Y"))
+    restaurant.add_rischio(restaurant.violations[-1].risk)
+
   
   return restaurants
 
 
 if __name__ == '__main__':
-  """l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", "Ney York")
+  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all_chicago.csv", "Illinois")
   x = json.dumps(l, indent=4, cls = RestaurantEncoder)
   print(x)
-  f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ny.json", 'w')
+  f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/ch.json", 'w')
   f.write(x)
-  f.close()"""
-  filename= "/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago.json"
+  f.close()
+  #filename= "/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago.json"
 
-  with open (filename, 'r' ) as f:
+  """with open (filename, 'r' ) as f:
     content = f.read()
     content_new = re.sub('(\d{2})/(\d{2})/(\d{4})', r'\3-\1-\2', content, flags = re.M)
     print(content_new)
@@ -78,7 +85,7 @@ if __name__ == '__main__':
     f.write(content_new)
     f.close()
     #print(content)
-  #print(json.dumps(l, indent=4, cls = RestaurantEncoder))
+  #print(json.dumps(l, indent=4, cls = RestaurantEncoder))"""
 
 
 
