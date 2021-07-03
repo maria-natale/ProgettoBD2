@@ -14,6 +14,26 @@ Cerca ristorante per stato, città, rischio
 db.ristoranti.find({state: 'California', city: 'LOS ANGELES'}).limit(2)
 Cerca ristorante per nome, ordine per 
 
-for var in (db.ristoranti.distinct('state')){ 
-	db.ristoranti.find({state: var}).limit(1)
+
+
+
+var states = db.ristoranti.distinct('state')
+for (i in states){
+	s = states[i]
+	print(s)
+	db.ristoranti.find({state: s}).limit(1);
 }
+
+
+var states = db.ristoranti.distinct('state')
+results = []
+for (i in states){
+	s = states[i]
+	print(s)
+	results.push(db.ristoranti.find({state: s}, {name:1, state:1}).limit(1));
+}
+print(results)
+
+
+var states = db.ristoranti.distinct('state')
+db.ristoranti.find({state:states[0]}, {name:1, state:1})
