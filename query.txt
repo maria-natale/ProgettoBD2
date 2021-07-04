@@ -53,7 +53,6 @@ results = []
 for (i in states){
 	s = states[i]
 	print(s)
-	print("tette")
 	results.push(db.ristoranti.find({state: s}, {name:1, state:1}).limit(10).toArray());
 }
 print(results)
