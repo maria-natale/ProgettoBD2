@@ -13,6 +13,7 @@ db.ristoranti.find({state: 'California', ''}).limit(10)
 Cerca ristorante per stato, città, rischio 
 db.ristoranti.find({state: 'California', city: 'LOS ANGELES'}).limit(2)
 Cerca ristorante per nome, ordine per rischio
+
 db.ristoranti.aggregate([
     {"$match" : {state :"New York"}},
     { "$project" : {
@@ -23,11 +24,12 @@ db.ristoranti.aggregate([
         "zipcode": 1,
         "state":1,
         "rischio":1,
+        "rischia": { $first: "$violations" },
         "order" : {
             "$cond" : {
-                if : { "$eq" : ["$rischio", "Risk 3 (Low)"] }, then : 1,
+                if : { "$eq" : ["$rischia" , "Risk 3 (Low)"] }, then : 1,
                 else  : { "$cond" : {
-                    "if" : { "$eq" : ["$rischio", "Risk 2 (Medium)"] }, then : 2, 
+                    "if" : { "$eq" : ["$rischia", "Risk 2 (Medium)"] }, then : 2, 
                     else  : 3
                     }
                 }
@@ -37,7 +39,18 @@ db.ristoranti.aggregate([
     {"$sort" : {"order" : -1} }
 ])
 
-
+####prendi la prima 
+db.ristoranti.aggregate([
+    {"$match": {"name": ".88$ AND MORE ASIAN GROCERY"}},
+    
+        { "$project": {
+            "risk": { $first: "$violations" },
+            "_id": 0,
+        "name":1,
+        "state":1,
+        "address":1
+        }}
+])
 
 
 var states = db.ristoranti.distinct('state')
