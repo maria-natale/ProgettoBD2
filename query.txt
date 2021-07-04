@@ -37,7 +37,18 @@ db.ristoranti.aggregate([
     {"$sort" : {"order" : -1} }
 ])
 
-
+####prendi la prima 
+db.ristoranti.aggregate([
+    {"$match": {"name": ".88$ AND MORE ASIAN GROCERY"}},
+    
+        { "$project": {
+            "risk": { $first: "$violations" },
+            "_id": 0,
+        "name":1,
+        "state":1,
+        "address":1
+        }}
+])
 
 
 var states = db.ristoranti.distinct('state')
