@@ -61,7 +61,8 @@ def read_file(filename, state):
     violation = row['violation']
     risk = row['risk']
     restaurants[len(restaurants)-1].add_violation(Inspection(date, violation, risk))
-    restaurant.violations.sort(key=lambda r: datetime.datetime.strptime(r.inspection_date, "%m/%d/%Y"))
+    restaurant.violations.sort(key=lambda r: datetime.datetime.strptime(r.inspection_date, "%m/%d/%Y"),reverse=True
+                              )
     restaurant.add_rischio(restaurant.violations[-1].risk)
 
   
