@@ -13,7 +13,7 @@ db.ristoranti.find({state: 'California', ''}).limit(10)
 Cerca ristorante per stato, città, rischio 
 db.ristoranti.find({state: 'California', city: 'LOS ANGELES'}).limit(2)
 Cerca ristorante per nome, ordine per rischio
-
+risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded']
 db.ristoranti.aggregate([
     {"$match" : {state :"New York"}},
     { "$project" : {
@@ -23,8 +23,7 @@ db.ristoranti.aggregate([
         "city" : 1,
         "zipcode": 1,
         "state":1,
-        "rischio":1,
-        "rischia": { $first: "$violations" },
+        "rischia": { $first: "$violations.risk" },
         "order" : {
             "$cond" : {
                 if : { "$eq" : ["$rischia" , "Risk 3 (Low)"] }, then : 1,
@@ -34,7 +33,8 @@ db.ristoranti.aggregate([
                     }
                 }
             }
-        }
+        },
+	has_risk: {$in: [{$first: "$violations.risk"}, risks]}
     } }, 
     {"$sort" : {"order" : -1} }
 ])

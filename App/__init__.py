@@ -26,15 +26,12 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
     @app.route('/')
     def welcome():
         return render_template('index.html')
     
     @app.route('/search_restaurant', methods=['POST'])
     def handle_data():
-        state = request.form['state_name']
-        app.logger.info(f"Stato: {state}")
         return SearchRestaurant.search_restaurants(request)
 
     return app

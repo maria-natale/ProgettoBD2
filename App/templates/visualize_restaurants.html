@@ -35,7 +35,6 @@
 
   
   <body>
-
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
@@ -48,94 +47,86 @@
           </div>
         </div>
       </nav>
-    <!-- ============================================-->
-      <!-- <section> begin ============================-->
-        <section class="py-0">
-
-            <div class="container">
-              <div class="row h-100 gx-2 mt-7">
-                <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
-                  <div class="card card-span h-100">
-                    <div class="position-relative"> <img class="img-fluid rounded-3 w-100" src="static/img/gallery/discount-item-1.png" alt="..." />
-                      <div class="card-actions">
-                        <div class="badge badge-foodwagon bg-primary p-4">
-                          <div class="d-flex flex-between-center">
-                            <div class="text-white fs-7">15</div>
-                            <div class="d-block text-white fs-2">% <br />
-                              <div class="fw-normal fs-1 mt-2">Off</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body px-0">
-                      <h5 class="fw-bold text-1000 text-truncate">Flat Hill Slingback</h5><span class="badge bg-soft-danger py-2 px-3"><span class="fs-1 text-danger">6 days Remaining</span></span>
-                    </div><a class="stretched-link" href="#"></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
-                  <div class="card card-span h-100">
-                    <div class="position-relative"> <img class="img-fluid rounded-3 w-100" src="static/img/gallery/discount-item-2.png" alt="..." />
-                      <div class="card-actions">
-                        <div class="badge badge-foodwagon bg-primary p-4">
-                          <div class="d-flex flex-between-center">
-                            <div class="text-white fs-7">10</div>
-                            <div class="d-block text-white fs-2">% <br />
-                              <div class="fw-normal fs-1 mt-2">Off</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body px-0">
-                      <h5 class="fw-bold text-1000 text-truncate">Ocean Blue Ring</h5><span class="badge bg-soft-danger py-2 px-3"><span class="fs-1 text-danger">6 days Remaining</span></span>
-                    </div><a class="stretched-link" href="#"></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
-                  <div class="card card-span h-100">
-                    <div class="position-relative"> <img class="img-fluid rounded-3 w-100" src="static/img/gallery/discount-item-3.png" alt="..." />
-                      <div class="card-actions">
-                        <div class="badge badge-foodwagon bg-primary p-4">
-                          <div class="d-flex flex-between-center">
-                            <div class="text-white fs-7">25</div>
-                            <div class="d-block text-white fs-2">% <br />
-                              <div class="fw-normal fs-1 mt-2">Off</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body px-0">
-                      <h5 class="fw-bold text-1000 text-truncate">Brown Leathered Wallet</h5><span class="badge bg-soft-danger py-2 px-3"><span class="fs-1 text-danger">6 days Remaining</span></span>
-                    </div><a class="stretched-link" href="#"></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
-                  <div class="card card-span h-100">
-                    <div class="position-relative"> <img class="img-fluid rounded-3 w-100" src="static/img/gallery/discount-item-4.png" alt="..." />
-                      <div class="card-actions">
-                        <div class="badge badge-foodwagon bg-primary p-4">
-                          <div class="d-flex flex-between-center">
-                            <div class="text-white fs-7">20</div>
-                            <div class="d-block text-white fs-2">% <br />
-                              <div class="fw-normal fs-1 mt-2">Off</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body px-0">
-                      <h5 class="fw-bold text-1000 text-truncate">Silverside Wristwatch</h5><span class="badge bg-soft-danger py-2 px-3"><span class="fs-1 text-danger">6 days Remaining</span></span>
-                    </div><a class="stretched-link" href="#"></a>
-                  </div>
-                </div>
-              </div>
-            </div><!-- end of .container-->
-    
-          </section>
+      <div style="height:20px"></div>
+        
           <!-- <section> close ============================-->
           <!-- ============================================-->
+            <section class="py-0">
+                <div class="container">
+                    <h1>Risultato</h1>
+                    <div class="row">
+                  <div class="col-md-4 col-xl-4">
+				    <div class="card w-xxl-75">
+                    <div class="card-body">
+					<span class="entry-title bb-1px padding-bottom-10 header-block-sidebar-search">
+            <i class="fa fa-search-plus txt-primary"></i> AFFINA LA TUA RICERCA</span>	</br></br>				
+						<form action="" method="POST">
+							<div class="form-group">
+                                {%if not city_flag: %}
+                                <input class="form-control input-box form-foodwagon-control" id="city_name" type="text" name = "city_name" placeholder="Inserisci nome della città" />
+                            </br></br>
+                            {% endif %}
+                            <b>Rischio:</b>
+							<div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="basso" id="rischioBasso" checked>
+                                <label class="form-check-label" for="rischioBasso">
+                                  Basso
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="medio" id="rischioMedio" checked>
+                                <label class="form-check-label" for="rischioMedio">
+                                Medio
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="alto" id="rischioAlto" checked>
+                                <label class="form-check-label" for="rischioAlto">
+                                  Alto
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="sconosciuto" id="rischioSconosciuto" checked>
+                                <label class="form-check-label" for="rischioSconosciuto">
+                                  Sconosciuto
+                                </label>
+                              </div>
+                            </br></br>
+                              <b>Tipo di cucina:</b>
+
+                            </br></br>
+                              <b>Tipo di ristorante: </b>
+
+                            </br></br>
+                              <b>Ordina</b>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value="basso_alto" checked>
+                                <label class="form-check-label" for="basso_alto">
+                                  Rischio basso - alto
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value="alto_basso">
+                                <label class="form-check-label" for="alto_basso">
+                                  Rischio alto - basso
+                                </label>
+                              </div>
+                            </br>
+                              <div class="d-grid gap-3 col-sm-auto">
+                                <button class="btn btn-danger" type="submit">Filtra ristoranti</button>
+                              </div>
+						</form>
+					</div>
+				</div>
+			</div>
+            </div>
+           
+            <div class="col-md-8 col-xl-8">
+                <h1>Risultati della ricerca</h1>
+            </div>
+            </div>
+                </div>
+          </section>
         </main>
         <!-- ===============================================-->
         <!--    End of Main Content-->
@@ -179,5 +170,18 @@
     
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap" rel="stylesheet">
       </body>
-    
+      <script>
+		$(document).ready(
+					$(function() {
+						$('input[name="ordina_rischio"]').click(
+								function() {
+									var $radio = $(this);
+									if ($radio.data('waschecked') == true) {
+										$radio.prop('checked', false);
+										$radio.data('waschecked', false);
+									} else
+										$radio.data('waschecked', true);
+								});
+					}));
+	</script>
     </html>

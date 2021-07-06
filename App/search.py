@@ -4,7 +4,17 @@ from dbManager import DBManager
 class SearchRestaurant:
     @staticmethod
     def search_restaurants(req):
-        state = request.form['state_name']
-        print(str(state))
-        result = DBManager.search_bystate(str(state))
-        return render_template('visualize_restaurants.html', value = state)
+        try:
+            state = request.form['state_name']
+        except KeyError:
+            state = None
+            city = request.form['city_name']
+        city_flag = False
+        if state:
+            print(str(state))
+            result = DBManager.search_bystate(str(state)) 
+        else:
+            result = DBManager.search_bycity(str(city))
+            city_flag = True
+        #ristoranti, città, cucina
+        return render_template('visualize_restaurants.html', result = state, city_flag = city_flag, cuisine_flag = False )
