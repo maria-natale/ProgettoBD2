@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="it-IT" dir="ltr">
 
   <head>
     <meta charset="utf-8">
@@ -17,10 +17,11 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('static', filename='img/favicons/apple-touch-icon.png')}}>
-    <link rel="icon" type="image/png" sizes="32x32" href={{ url_for('static', filename='img/img/favicons/favicon-32x32.png')}}>
-    <link rel="icon" type="image/png" sizes="16x16" href={{ url_for('static', filename='img/img/favicons/favicon-16x16.png')}}>
-    <link rel="shortcut icon" type="image/x-icon" href={{ url_for('static', filename='img/img/favicons/favicon.ico')}}>
+    <link rel="icon" type="image/png" sizes="32x32" href={{ url_for('static', filename='img/favicons/favicon-32x32.png')}}>
+    <link rel="icon" type="image/png" sizes="16x16" href={{ url_for('static', filename='img/favicons/favicon-16x16.png')}}>
+    <link rel="shortcut icon" type="image/x-icon" href={{ url_for('static', filename='img/favicons/favicon.ico')}}>
     <link rel="manifest" href={{ url_for('static', filename='img/favicons/manifest.json')}}>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
     <meta name="msapplication-TileImage" content="static/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
@@ -43,15 +44,7 @@
         <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
           <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
-            <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block">
-              <p class="mb-0 fw-bold text-lg-center">Deliver to: <i class="fas fa-map-marker-alt text-warning mx-2"></i><span class="fw-normal">Current Location </span><span>Mirpur 1 Bus Stand, Dhaka</span></p>
-            </div>
-            <form class="d-flex mt-4 mt-lg-0 ms-lg-auto ms-xl-0">
-              <div class="input-group-icon pe-2"><i class="fas fa-search input-box-icon text-primary"></i>
-                <input class="form-control border-0 input-box bg-100" type="search" placeholder="Search Food" aria-label="Search" />
-              </div>
-              <button class="btn btn-white shadow-warning text-warning" type="submit"> <i class="fas fa-user me-2"></i>Login</button>
-            </form>
+            
           </div>
         </div>
       </nav>
@@ -66,34 +59,42 @@
                 <div class="card-body">
                   <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                      <button class="nav-link active mb-3" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-motorcycle me-2"></i>Delivery</button>
-                      <button class="nav-link mb-3" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fas fa-shopping-bag me-2"></i>Pickup</button>
+                      <button class="nav-link active mb-3" id="nav-home-tab" data-bs-toggle="tab" onclick="state_clicked()" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Stato</button>
+                      <button class="nav-link mb-3" id="nav-profile-tab" data-bs-toggle="tab" onclick="city_clicked()" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fas fa-shopping-bag me-2"></i>Città</button>
                     </div>
                   </nav>
                   <div class="tab-content mt-3" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                      <form class="row gx-2 gy-2 align-items-center">
-                        <div class="col">
-                          <div class="input-group-icon"><i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
-                            <label class="visually-hidden" for="inputDelivery">Address</label>
-                            <input class="form-control input-box form-foodwagon-control" id="inputDelivery" type="text" placeholder="Enter Your Address" />
+                      <form class="row gx-2 gy-2 align-items-center" action = "http://127.0.0.1:5000/search_restaurant" method="POST">
+                        <div class="col" id = "div-name">
+                          <div class="input-group-icon" id = "div-input"><i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
+                            <label class="visually-hidden"  id="label-name">Nome</label>
+                            <select class="form-select" aria-label="Default select example" id="state_name" name="state_name">
+                              <option value="California">California</option>
+                              <option value="Illinois">New York</option>
+                              <option value="New York">Illinois</option>
+                            </select>
                           </div>
+                          <script>
+                            el = $("#div-input");
+                            function state_clicked(){
+                                $("#city_name").remove()
+                                $("#state_name").remove()
+                                el.append('<select class="form-select" aria-label="Default select example" id="state_name" name="state_name">'+
+                                  '<option value="California">California</option>'+
+                                  '<option value="Illinois">New York</option>'+
+                                  '<option value="New York">Illinois</option></select>')
+                            };
+                            function city_clicked(){
+                              console.log("città cliccsto")
+                              $("#city_name").remove()
+                              $("#state_name").remove()
+                              el.append('<input class="form-control input-box form-foodwagon-control" id="city_name" type="text" name = "city_name" placeholder="Inserisci nome della città" />')
+                            };
+                          </script>
                         </div>
                         <div class="d-grid gap-3 col-sm-auto">
-                          <button class="btn btn-danger" type="submit">Find Food</button>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                      <form class="row gx-4 gy-2 align-items-center">
-                        <div class="col">
-                          <div class="input-group-icon"><i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
-                            <label class="visually-hidden" for="inputPickup">Address</label>
-                            <input class="form-control input-box form-foodwagon-control" id="inputPickup" type="text" placeholder="Enter Your Address" />
-                          </div>
-                        </div>
-                        <div class="d-grid gap-3 col-sm-auto">
-                          <button class="btn btn-danger" type="submit">Find Food</button>
+                          <button class="btn btn-danger" type="submit">Cerca ristoranti</button>
                         </div>
                       </form>
                     </div>
