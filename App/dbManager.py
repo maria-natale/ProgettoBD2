@@ -1,10 +1,24 @@
 import pymongo 
+from flask import Flask,render_template,request,make_response,jsonify
 from bson.json_util import dumps
+from pprint import pprint
+class DBManager:
+    db = None
 
-class DBManager:    
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
-    mydb = myclient["RistorantiDB"]
-    ristoranti = mydb["ristoranti"]
+    def connect(self):
+        client = pymongo.MongoClient("localhost:27017")
+        db = client.Ristoranti
+        self.db=db.ristoranti
+        
+
+    def query(self, sql):
+      cursor = self.conn.find(sql)  
+      return cursor 
+ 
+    #serverStatusResult=mydb.command("serverStatus")
+    #pprint(serverStatusResult)
+
+
 
     @staticmethod
     def search_byname(name):
@@ -13,8 +27,12 @@ class DBManager:
     
     @staticmethod
     def search_bystate(state):
-        result = DBManager.ristoranti.find({"state:": state})
-        print(dumps(result))
+        db = DBManager()
+        db.connect()
+        print(state)
+        result = db.db.find({"state":state})
+        print("culo nudo")
+        print(result)
         return result
 
 if __name__=='__main__':
