@@ -49,10 +49,10 @@ def create_app(test_config=None):
 
     @app.route('/get_information', methods=['POST', 'GET'])
     def getRestaurant():
-        #return SearchRestaurant.get_information(request)
         id = request.form['id']
         print(f'Id ristorante: {id}')
-        return render_template('index.html')
+        return SearchRestaurant.get_information(id)
+        #return render_template('detail_restaurant.html')
     
 
     return app

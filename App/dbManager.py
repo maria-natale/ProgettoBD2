@@ -31,7 +31,14 @@ class DBManager:
         result = db.db.find({"state":state})
         print(result)
         return list(result)
-    
+
+    @staticmethod
+    def search_byid(id):
+        db = DBManager()
+        db.connect()
+        result = db.db.find({"_id": id})
+        return list(result)
+
     """
     @staticmethod
     def search_distinct_city(initial):
