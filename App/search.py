@@ -88,6 +88,8 @@ class SearchRestaurant:
             res_type = request.form['res_type']
         except KeyError:
             res_type = None
+        if res_type == '':
+            res_type = None
 
         try:
             ordine = request.form['ordina_rischio']
