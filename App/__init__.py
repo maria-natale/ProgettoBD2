@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from search import SearchRestaurant
 
 
@@ -28,13 +28,28 @@ def create_app(test_config=None):
 
     @app.route('/')
     def welcome():
+        session['city'] = None
+        session['state'] = None
+        session['city_flag'] = None
+        session['risks'] = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded']
+        session['res_type'] =  None
+        session['ordine'] = 1
+        session['cuisine_flag'] = None
         return render_template('index.html')
     
-    @app.route('/search_restaurant', methods=['POST'])
+    @app.route('/search_restaurant', methods=['POST', 'GET'])
     def handle_data():
         return SearchRestaurant.search_restaurants(request)
+    
+
+    @app.route('/filter_restaurants', methods=['POST', 'GET'])
+    def filter():
+        return SearchRestaurant.filter_restaurant(request)
+
 
     return app
+
+
 
 if __name__ == '__main__':
     create_app().run(host='0.0.0.0', port=5000, debug=True)

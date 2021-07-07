@@ -25,7 +25,6 @@
     <meta name="msapplication-TileImage" content="static/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
-
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
@@ -60,7 +59,7 @@
                     <div class="card-body">
 					<span class="entry-title bb-1px padding-bottom-10 header-block-sidebar-search">
             <i class="fa fa-search-plus txt-primary"></i> AFFINA LA TUA RICERCA</span>	</br></br>				
-						<form action="" method="POST">
+						<form action = "http://127.0.0.1:5000/filter_restaurants" method="POST">
 							<div class="form-group">
                                 {%if not city_flag: %}
                                 <input class="form-control input-box form-foodwagon-control" id="city_name" type="text" name = "city_name" placeholder="Inserisci nome della città" />
@@ -68,45 +67,75 @@
                             {% endif %}
                             <b>Rischio:</b>
 							<div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="basso" id="rischioBasso" checked>
+                                {% if "Risk 3 (Low)" in risks: %}
+                                  <input class="form-check-input" type="checkbox" name = "check" value="Risk 3 (Low)" id="rischioBasso" checked>
+                                {%else: %}
+                                  <input class="form-check-input" type="checkbox" name = "check" value="Risk 3 (Low)" id="rischioBasso">
+                                {%endif %}
                                 <label class="form-check-label" for="rischioBasso">
                                   Basso
                                 </label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="medio" id="rischioMedio" checked>
+                                {% if "Risk 2 (Medium)" in risks: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Risk 2 (Medium)" id="rischioMedio" checked>
+                                {%else: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Risk 2 (Medium)" id="rischioMedio">
+                                {%endif %}
                                 <label class="form-check-label" for="rischioMedio">
                                 Medio
                                 </label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="alto" id="rischioAlto" checked>
+                                {% if "Risk 1 (High)" in risks: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Risk 1 (High)" id="rischioAlto" checked>
+                                {%else: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Risk 1 (High)" id="rischioAlto">
+                                {%endif %}
                                 <label class="form-check-label" for="rischioAlto">
                                   Alto
                                 </label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="sconosciuto" id="rischioSconosciuto" checked>
+                                {% if "Not Yet Graded" in risks: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Not Yet Graded" id="rischioSconosciuto" checked>
+                                {%else: %}
+                                <input class="form-check-input" type="checkbox" name = "check" value="Not Yet Graded" id="rischioSconosciuto">
+                                {%endif %}
                                 <label class="form-check-label" for="rischioSconosciuto">
                                   Sconosciuto
                                 </label>
                               </div>
                             </br></br>
+                              {%if session['state'] is not none and session['state'] == 'New York' and not session['cuisine_flag']: %}
                               <b>Tipo di cucina:</b>
-
+                              <input class="form-control input-box form-foodwagon-control" id="res_type" type="text" name = "res_type" placeholder="Inserisci tipo di cucina" />
                             </br></br>
+                              {% endif %}
+                            
+                            {%if session['state'] is not none and session['state'] == 'Illinois' and not session['cuisine_flag']:%}
                               <b>Tipo di ristorante: </b>
-
+                              <input class="form-control input-box form-foodwagon-control" id="res_type" type="text" name = "res_type" placeholder="Inserisci tipo di ristorante" />
                             </br></br>
+                              {% endif %}
+
                               <b>Ordina</b>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value="basso_alto" checked>
+                                {%if session['ordine'] == 1: %}
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value=1 checked>
+                                {%else: %}
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value=1 >
+                                {% endif %}
                                 <label class="form-check-label" for="basso_alto">
                                   Rischio basso - alto
                                 </label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value="alto_basso">
+                                {%if session['ordine'] == -1: %}
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value=-1 checked >
+                                {%else: %}
+                                <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value=-1>
+                                {% endif %}
                                 <label class="form-check-label" for="alto_basso">
                                   Rischio alto - basso
                                 </label>
@@ -123,7 +152,24 @@
            
             <div class="col-md-8 col-xl-8">
                 <h1>Risultati della ricerca</h1>
-            </div>
+                <div class="row">
+                  {{ pagination.links }}
+                </div>
+                {% for r in restaurants: %}
+                <div class="row">
+                  <div class="card w-xxl-75">
+                    <div class="card-body">
+                  <h3>{{r['name']}}</h3>
+                  <p>{{r['address']}}, {{r['city']}}, {{r['zipcode']}}</p>
+                  <p>Rischio: <b>{{r['rischia']}}</b><p>
+                </div>
+                </div>
+                </div>
+                {% endfor %}
+                <div class="row">
+                  {{ pagination.links }}
+                </div>
+            
             </div>
                 </div>
           </section>

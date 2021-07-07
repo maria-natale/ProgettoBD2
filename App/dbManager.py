@@ -7,8 +7,8 @@ class DBManager:
 
     def connect(self):
         client = pymongo.MongoClient("localhost:27017")
-        db = client.Ristoranti
-        self.db=db.ristoranti
+        db = client['RistorantiDB']
+        self.db=db['ristoranti']
         
 
     def query(self, sql):
@@ -21,7 +21,7 @@ class DBManager:
         db = DBManager()
         db.connect()
         result = db.db.find({"name":name})
-        return result
+        return list(result)
     
     @staticmethod
     def search_bystate(state):
@@ -30,7 +30,7 @@ class DBManager:
         print(state)
         result = db.db.find({"state":state})
         print(result)
-        return result
+        return list(result)
     
 
     @staticmethod
@@ -38,9 +38,8 @@ class DBManager:
         risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded'], res_type = None, risk_order = -1):
         db = DBManager()
         db.connect()
-        myMatch = {
-            
-        }
+        myMatch = {}
+
         if state is not None:
             myMatch['state'] = state
             if state == 'New York' and res_type is not None:
@@ -53,7 +52,7 @@ class DBManager:
         result = db.db.aggregate([
             {"$match" : myMatch},
             { "$project" : {
-                "_id" : 1,
+                "_id" : 0,
                 "name":1,
                 "address":1,
                 "city" : 1,
@@ -70,22 +69,23 @@ class DBManager:
                     }
                     }
                 },
-            "has_risk": {"$in": [{"$first": "$violations.risk"}, risks]}
+            "has_risk": {"$in": [{"$first": "$violations.risk"}, ['Risk 1 (High)']]}
             } }, 
-            {"$sort" : {"order" : risk_order} }
+            {"$sort" : {"order" : int(risk_order)} }
         ])
         
-        print("ciao")
+        result = list(result)
+        new = []
         for x in result:
-            print(x)
-        return result
+            if x['has_risk']:
+                new.append(x)
+
+        return new
 
 
 
 if __name__=='__main__':
-    #result = DBManager.search_byname('#1 BUFFET')
-    #print(dumps(result))
-    DBManager.filter_restaurants(state = 'New York', risk_order=1)
-    #for x in result:
-     #   print(x)
+    result = DBManager.filter_restaurants(state = 'New York', risk_order=1)
+    for x in result[:2]:
+        print(x)
 
