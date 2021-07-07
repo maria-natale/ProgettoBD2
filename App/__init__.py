@@ -2,7 +2,8 @@ import os
 
 from flask import Flask, render_template, request, session
 from search import SearchRestaurant
-
+from dbManager import DBManager
+from flask_paginate import get_page_args
 
 
 def create_app(test_config=None):
@@ -46,6 +47,13 @@ def create_app(test_config=None):
     def filter():
         return SearchRestaurant.filter_restaurant(request)
 
+    @app.route('/get_information', methods=['POST', 'GET'])
+    def getRestaurant():
+        #return SearchRestaurant.get_information(request)
+        id = request.form['id']
+        print(f'Id ristorante: {id}')
+        return render_template('index.html')
+    
 
     return app
 

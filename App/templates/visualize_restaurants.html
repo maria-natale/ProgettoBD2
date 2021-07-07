@@ -39,7 +39,7 @@
     <!-- ===============================================-->
     <main class="main" id="top">
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
+        <div class="container"><a class="navbar-brand d-inline-flex" href="http://127.0.0.1:5000/"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
           <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
             
@@ -107,13 +107,13 @@
                                 </label>
                               </div>
                             </br></br>
-                              {%if session['state'] is not none and session['state'] == 'New York' and not session['cuisine_flag']: %}
+                              {%if session['state'] is not none and session['state'] == 'New York' and session['cuisine_flag']: %}
                               <b>Tipo di cucina:</b>
                               <input class="form-control input-box form-foodwagon-control" id="res_type" type="text" name = "res_type" placeholder="Inserisci tipo di cucina" />
                             </br></br>
                               {% endif %}
                             
-                            {%if session['state'] is not none and session['state'] == 'Illinois' and not session['cuisine_flag']:%}
+                            {%if session['state'] is not none and session['state'] == 'Illinois' and session['cuisine_flag']:%}
                               <b>Tipo di ristorante: </b>
                               <input class="form-control input-box form-foodwagon-control" id="res_type" type="text" name = "res_type" placeholder="Inserisci tipo di ristorante" />
                             </br></br>
@@ -149,7 +149,9 @@
 				</div>
 			</div>
             </div>
-           
+            <!-- ===============================================-->
+    <!--    Risultati-->
+    <!-- ===============================================-->
             <div class="col-md-8 col-xl-8">
                 <h1>Risultati della ricerca</h1>
                 <div class="row">
@@ -159,9 +161,18 @@
                 <div class="row">
                   <div class="card w-xxl-75">
                     <div class="card-body">
-                  <h3>{{r['name']}}</h3>
-                  <p>{{r['address']}}, {{r['city']}}, {{r['zipcode']}}</p>
-                  <p>Rischio: <b>{{r['rischia']}}</b><p>
+                  <form id = "formInformation" action = "http://127.0.0.1:5000/get_information" method="POST">
+                    <input id="id" name="id" type="hidden" value={{r['_id']}}>
+                  <h3 id = "nome_ristorante">{{r['name']}}</h3>
+                  <p>{{r['address']}}, {{r['city'].upper()}}, {{r['zipcode']}}</p>
+                  {% if r['state'] == 'New York': %} 
+                  <p>Tipo di cucina: {{r['cuisine_description']}} </p>
+                  {%endif%}
+                  {%if r['state'] == 'Illinois': %}
+                  <p>Tipo di ristorante: {{r['restaurant_type']}}</p>
+                  {% endif %}
+                  <p>Rischio: <b>{{r['rischia']}}</b></p>
+                  </form>
                 </div>
                 </div>
                 </div>
@@ -230,4 +241,12 @@
 								});
 					}));
 	</script>
+  <script>
+     window.addEventListener("load",function() {
+   document.getElementById("nome_ristorante").addEventListener("click",function(e) {
+     e.preventDefault(); // cancel the link
+     document.getElementById("formInformation").submit(); // but make sure nothing has name or ID="submit"
+   });
+ });
+  </script>
     </html>

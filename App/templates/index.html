@@ -39,7 +39,7 @@
     <!-- ===============================================-->
     <main class="main" id="top">
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
+        <div class="container"><a class="navbar-brand d-inline-flex" href="http://127.0.0.1:5000/"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
           <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
             
@@ -63,14 +63,14 @@
                   </nav>
                   <div class="tab-content mt-3" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                      <form class="row gx-2 gy-2 align-items-center" action = "http://127.0.0.1:5000/search_restaurant" method="POST">
+                      <form class="row gx-2 gy-2 align-items-center" id="formIndex" action = "http://127.0.0.1:5000/search_restaurant" method="POST">
                         <div class="col" id = "div-name">
                           <div class="input-group-icon" id = "div-input"><i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
                             <label class="visually-hidden"  id="label-name">Nome</label>
                             <select class="form-select" aria-label="Default select example" id="state_name" name="state_name">
                               <option value="California">California</option>
-                              <option value="Illinois">New York</option>
-                              <option value="New York">Illinois</option>
+                              <option value="Illinois">Illinois</option>
+                              <option value="New York">New York</option>
                             </select>
                           </div>
                           <script>
@@ -80,8 +80,8 @@
                                 $("#state_name").remove()
                                 el.append('<select class="form-select" aria-label="Default select example" id="state_name" name="state_name">'+
                                   '<option value="California">California</option>'+
-                                  '<option value="Illinois">New York</option>'+
-                                  '<option value="New York">Illinois</option></select>')
+                                  '<option value="Illinois">Illinois</option>'+
+                                  '<option value="New York">New York</option></select>')
                             };
                             function city_clicked(){
                               console.log("città cliccsto")
@@ -1077,6 +1077,8 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
 
 
 

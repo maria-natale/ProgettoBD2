@@ -2,6 +2,8 @@ Cerca ristorante per nome
 db.ristoranti.find({name: '#1 BUFFET'})
 db.ristoranti.find({name: /^BUFF/}) iniziano per BUFF
 
+db.ristoranti.distinct('city', {city: {$regex: '^C'}})
+
 
 Cerca ristoranti per Stato
 db.ristoranti.find({state: 'California'})
@@ -15,28 +17,57 @@ db.ristoranti.find({state: 'California', city: 'LOS ANGELES'}).limit(2)
 Cerca ristorante per nome, ordine per rischio
 risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded']
 db.ristoranti.aggregate([
-    {"$match" : {state :"New York"}},
-    { "$project" : {
-        "_id" : 1,
-        "name":1,
-        "address":1,
-        "city" : 1,
-        "zipcode": 1,
-        "state":1,
-        "rischia": { $first: "$violations.risk" },
-        "order" : {
-            "$cond" : {
-                if : { "$eq" : ["$rischia" , "Risk 3 (Low)"] }, then : 1,
-                else  : { "$cond" : {
-                    "if" : { "$eq" : ["$rischia", "Risk 2 (Medium)"] }, then : 2, 
-                    else  : 3
-                    }
-                }
+  {
+    "$match": {
+      state: "Illinois"
+    }
+  },
+  {
+    "$project": {
+      "_id": 1,
+      "name": 1,
+      "address": 1,
+      "city": 1,
+      "zipcode": 1,
+      "state": 1,
+      "rischia": {
+        $first: "$violations.risk"
+      },
+      "order": {
+        $cond: {
+          if: {
+            $eq: [
+              {
+                $first: "$violations.risk"
+              },
+              "Risk 3 (Low)"
+            ]
+          },
+          then: 1,
+          else: {
+            $cond: {
+              if: {
+                $eq: [
+                  {
+                    $first: "$violations.risk"
+                  },
+                  "Risk 2 (Medium)"
+                ]
+              },
+              then: 2,
+              else: 3
             }
-        },
-	has_risk: {$in: [{$first: "$violations.risk"}, risks]}
-    } }, 
-    {"$sort" : {"order" : -1} }
+          }
+        }
+      },
+      has_risk: {$in: [{$first: "$violations.risk"}, risks]}
+    }
+  },
+  {
+    "$sort": {
+      "order": -1
+    }
+  }
 ])
 
 ####prendi la prima 

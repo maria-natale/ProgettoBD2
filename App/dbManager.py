@@ -32,10 +32,34 @@ class DBManager:
         print(result)
         return list(result)
     
+    """
+    @staticmethod
+    def search_distinct_city(initial):
+        db = DBManager()
+        db.connect()
+        result = db.db.distinct('city', {"city": {"$regex": '^'+initial.lower()}})
+        return list(result)
+    
+
+    @staticmethod
+    def search_distinct_cuisine(initial):
+        db = DBManager()
+        db.connect()
+        result = db.db.distinct('cuisine_description', {"cuisine_description": {"$regex": '^'+initial}})
+        return list(result)
+    
+
+    @staticmethod
+    def search_distinct_type_res(initial):
+        db = DBManager()
+        db.connect()
+        result = db.db.distinct('restaurant_type', {"restaurant_type": {"$regex": '^'+initial}})
+        return list(result)"""
+
 
     @staticmethod
     def filter_restaurants(state = None, city = None, 
-        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded'], res_type = None, risk_order = -1):
+        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded'], res_type = None, risk_order = 1):
         db = DBManager()
         db.connect()
         myMatch = {}
@@ -45,34 +69,62 @@ class DBManager:
             if state == 'New York' and res_type is not None:
                 myMatch['cuisine_description'] = res_type
             elif state == 'Illinois' and res_type is not None:
-                myMatch['type'] = res_type
+                myMatch['restaurant_type'] = res_type
         if city is not None:
-            myMatch['city'] = city
+            myMatch['city'] = city.lower()
         print(myMatch)
         result = db.db.aggregate([
-            {"$match" : myMatch},
-            { "$project" : {
-                "_id" : 0,
-                "name":1,
-                "address":1,
-                "city" : 1,
+            {
+                "$match": myMatch
+            },
+            {
+                "$project": {
+                "_id": 1,
+                "name": 1,
+                "address": 1,
+                "city": 1,
                 "zipcode": 1,
-                "state":1,
-                "rischia": { "$first": "$violations.risk" },
-                "order" : {
-                    "$cond" : {
-                        "if" : { "$eq" : ["$rischia" , "Risk 3 (Low)"] }, "then" : 1,
-                        "else"  : { "$cond" : {
-                        "if" : { "$eq" : ["$rischia", "Risk 2 (Medium)"] }, "then" : 2, 
-                            "else"  : 3
+                "state": 1,
+                "rischia": {
+                    "$first": "$violations.risk"
+                },
+                "order": {
+                    "$cond": {
+                    "if": {
+                        "$eq": [
+                        {
+                            "$first": "$violations.risk"
+                        },
+                        "Risk 3 (Low)"
+                        ]
+                    },
+                    "then": 1,
+                    "else": {
+                        "$cond": {
+                        "if": {
+                            "$eq": [
+                            {
+                                "$first": "$violations.risk"
+                            },
+                            "Risk 2 (Medium)"
+                            ]
+                        },
+                        "then": 2,
+                        "else": 3
                         }
                     }
                     }
                 },
-            "has_risk": {"$in": [{"$first": "$violations.risk"}, ['Risk 1 (High)']]}
-            } }, 
-            {"$sort" : {"order" : int(risk_order)} }
-        ])
+                "has_risk": {"$in": [{"$first": "$violations.risk"}, risks]}
+                }
+            },
+            {
+                "$sort": {
+                "order": int(risk_order)
+                }
+            }
+            ])
+        
         
         result = list(result)
         new = []
@@ -81,6 +133,7 @@ class DBManager:
                 new.append(x)
 
         return new
+        return result
 
 
 

@@ -47,9 +47,13 @@ def read_file(filename, state):
     address = row['address']
     if len(restaurants) == 0 or (restaurants[len(restaurants)-1].name!=name and restaurants[len(restaurants)-1].address!=address):
       city = row['city']
+      if city is not None:
+        city = city.lower()
       zipcode = row['zipcode']
       cuisine_description = row['cuisine_description']
       restaurant_type = row['type']
+      if restaurant_type is not None:
+        restaurant_type = restaurant_type.lower()
       phone = row['phone']
       restaurant = Restaurant(name, address, city, zipcode, cuisine_description, restaurant_type, phone, state)
       restaurants.append(restaurant)
@@ -57,26 +61,26 @@ def read_file(filename, state):
     violation = row['violation']
     risk = row['risk']
     restaurants[len(restaurants)-1].add_violation(Inspection(date, violation, risk))
-    restaurant.violations.sort(key=lambda r: datetime.datetime.strptime(r.inspection_date, "%Y-%m-%d"),reverse=True)
+    restaurant.violations.sort(key=lambda r: datetime.datetime.strptime(r.inspection_date, "%m/%d/%Y"),reverse=True)
 
   
   return restaurants
 
 
 if __name__ == '__main__':
-  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all_la.csv", "California")
+  l = read_file("/content/drive/MyDrive/datasetbd2/dataset_mod/dataset_all.csv", "New York")
   x = json.dumps(l, indent=4, cls = RestaurantEncoder)
   print(x)
-  f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/la.json", 'w')
+  f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/maria/ny.json", 'w')
   f.write(x)
   f.close()
-  #filename= "/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago.json"
+  filename= "/content/drive/MyDrive/datasetbd2/dataset_mod/maria/ny.json"
 
-  """with open (filename, 'r' ) as f:
+  with open (filename, 'r' ) as f:
     content = f.read()
     content_new = re.sub('(\d{2})/(\d{2})/(\d{4})', r'\3-\1-\2', content, flags = re.M)
     print(content_new)
-    f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/json/chicago_datenew.json", 'w')
+    f = open("/content/drive/MyDrive/datasetbd2/dataset_mod/maria/ny_datenew.json", 'w')
     f.write(content_new)
     f.close()
     #print(content)

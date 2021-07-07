@@ -19,7 +19,10 @@ class SearchRestaurant:
         try:
             city = request.form['city_name']
         except KeyError:
-            city = session['city']
+            try:
+                city = session['city']
+            except KeyError:
+                city = None
         
 
         city_flag = False if session['city_flag'] is None else session['city_flag']
@@ -43,7 +46,7 @@ class SearchRestaurant:
             ordine = session['ordine']
 
         result = DBManager.filter_restaurants(state = state, city = city, risks= risks, res_type = res_type, risk_order=ordine)
-        #session['restaurants'] = result
+
         session['risks'] = risks
         session['res_type'] =  False
         session['ordine'] = 1
@@ -54,7 +57,7 @@ class SearchRestaurant:
 
         page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
-        print(page, per_page, offset)
+
         total = len(result)
         print(total)
         pagination_res = SearchRestaurant.get_restaurants(result, offset=offset, per_page=per_page)
@@ -72,13 +75,15 @@ class SearchRestaurant:
     @staticmethod
     def filter_restaurant(req):
         risks = request.form.getlist('check')
+        print(risks)
+
         try:
             city = request.form['city_name']
         except KeyError:
             city = session['city']
         if city == '':
             city = None
-        print(city)
+
         try:
             res_type = request.form['res_type']
         except KeyError:
