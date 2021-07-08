@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, session
 from flask_paginate import Pagination, get_page_args
 from dbManager import DBManager
+import random
 
 class SearchRestaurant:
     ROWS_PER_PAGE = 10
@@ -49,7 +50,10 @@ class SearchRestaurant:
         try:
             ordine = request.form['ordina_rischio']
         except KeyError:
-            ordine = session['ordine']
+            try:
+                ordine = session['ordine']
+            except KeyError:
+                ordine = 1
 
         result = DBManager.filter_restaurants(state = state, city = city, risks= risks, res_type = res_type, risk_order=ordine)
 
@@ -57,6 +61,12 @@ class SearchRestaurant:
         session['res_type'] =  False
         session['ordine'] = 1
         session['city_flag'] = city_flag
+        
+        if len(result)>0:
+            state = result[0]['state']
+        if state == 'New York' or state == 'Illinois':
+                cuisine_flag = True
+        
         session['cuisine_flag'] = cuisine_flag
         session['state'] = state
         session['city'] = city
@@ -81,7 +91,8 @@ class SearchRestaurant:
     @staticmethod
     def filter_restaurant(req):
         risks = request.form.getlist('check')
-        print(risks)
+        if len(risks)==0:
+            risks = session['risks']
 
         try:
             city = request.form['city_name']
@@ -93,7 +104,10 @@ class SearchRestaurant:
         try:
             res_type = request.form['res_type']
         except KeyError:
-            res_type = None
+            try:
+                res_type = session['res_type']
+            except KeyError:
+                res_type = None
         if res_type == '':
             res_type = None
 
@@ -127,6 +141,7 @@ class SearchRestaurant:
         print(page, per_page, offset)
         total = len(result)
         print(total)
+        print(risks)
         pagination_res = SearchRestaurant.get_restaurants(result, offset=offset, per_page=per_page)
         pagination = Pagination(page=page, per_page=per_page, total=total,
                             css_framework='bootstrap4')
@@ -136,3 +151,80 @@ class SearchRestaurant:
                            per_page=per_page,
                            pagination=pagination, risks = risks, state = state,
             res_type = res_type, ordine = ordine, city_flag = city_flag, cuisine_flag = cuisine_flag)
+    
+
+    @staticmethod
+    def search_by_type(req):
+        cavia=request.form['type']
+        result=DBManager.searchrestype(str(cavia))
+        return render_template('visualize_restaurants.html', value = result)
+
+
+    @staticmethod
+    def search_restaurants_type(req):
+        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded']
+        args =request.args
+        cavia = args["valore"]
+        print(str(cavia))
+        result = DBManager.search_bytype(str(cavia))
+
+        page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+        print(page, per_page, offset)
+        total = len(result)
+        print(total)
+        pagination_res = SearchRestaurant.get_restaurants(result, offset=offset, per_page=per_page)
+        pagination = Pagination(page=page, per_page=per_page, total=total,
+                            css_framework='bootstrap4')
+            
+        session['res_type'] = str(cavia)
+        session['state'] = 'New York'
+        session['city_flag'] = False
+        session['cuisine_flag'] = False
+        print(pagination_res)
+        return render_template('visualize_restaurants.html',
+                           restaurants=pagination_res,
+                           page=page,
+                           per_page=per_page,
+                           pagination=pagination, risks = risks, state = 'New York',
+            res_type = str(cavia), ordine = 1, city_flag = False, cuisine_flag = False)
+    
+    
+    @staticmethod
+    def rischiare(req):
+        result = DBManager.search_byrisk()
+        x=random.sample(range(0,result.count()),8)
+        cavia=[]
+        for i in x:
+            cavia.append(result[i])
+            print(cavia)
+
+        return cavia
+    
+
+    @staticmethod
+    def search_type(req):
+        result = DBManager.searchtype()
+        x=random.sample(range(0,len(result)),12)
+        cavia=[]
+        print(x)
+
+        for i in x:
+            if i==12 or i==69 or i==50 or i ==48 or i==40 or i==10:
+                cavia.append(result[i+1])
+            else:
+                cavia.append(result[i])
+        return cavia
+
+    @staticmethod
+    def tutte(req):
+
+        result = DBManager.searchtype()
+        return result
+    
+
+    @staticmethod
+    def search_by_type(req):
+        cavia=request.form['type']
+        result=DBManager.searchrestype(str(cavia))
+        return render_template('visualize_restaurants.html', value = result)

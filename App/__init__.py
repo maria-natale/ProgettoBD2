@@ -37,7 +37,11 @@ def create_app(test_config=None):
         session['res_type'] =  None
         session['ordine'] = 1
         session['cuisine_flag'] = None
-        return render_template('index.html')
+        tipologia= SearchRestaurant.search_type(request)
+        rischiare= SearchRestaurant.rischiare(request)
+        tutteletipologie=SearchRestaurant.tutte(request)
+        return render_template('index.html', len = len(tipologia), tipologia = tipologia, 
+            rischiare=rischiare, tutteletipologie=tutteletipologie)
     
     @app.route('/search_restaurant', methods=['POST', 'GET'])
     def handle_data():
@@ -55,6 +59,19 @@ def create_app(test_config=None):
         print(f'Id ristorante: {id}')
         return render_template('index.html')
     
+
+    @app.route('/search_restaurant_type', methods=['GET'])
+    def handle_data1():
+        args =request.args
+        cavia = args["valore"]
+        return SearchRestaurant.search_restaurants_type(request)
+    
+
+    @app.route('/search_res_for_type', methods=['POST'])
+    def handle_data3():
+        typo = request.form['type']
+        app.logger.info(f"Tipologia: {typo}")
+        return SearchRestaurant.search_by_type(request)
 
     return app
 

@@ -2,6 +2,8 @@ import pymongo
 from flask import Flask,render_template,request,make_response,jsonify
 from bson.json_util import dumps
 from pprint import pprint
+import random
+
 class DBManager:
     db = None
 
@@ -32,30 +34,6 @@ class DBManager:
         print(result)
         return list(result)
     
-    """
-    @staticmethod
-    def search_distinct_city(initial):
-        db = DBManager()
-        db.connect()
-        result = db.db.distinct('city', {"city": {"$regex": '^'+initial.lower()}})
-        return list(result)
-    
-
-    @staticmethod
-    def search_distinct_cuisine(initial):
-        db = DBManager()
-        db.connect()
-        result = db.db.distinct('cuisine_description', {"cuisine_description": {"$regex": '^'+initial}})
-        return list(result)
-    
-
-    @staticmethod
-    def search_distinct_type_res(initial):
-        db = DBManager()
-        db.connect()
-        result = db.db.distinct('restaurant_type', {"restaurant_type": {"$regex": '^'+initial}})
-        return list(result)"""
-
 
     @staticmethod
     def filter_restaurants(state = None, city = None, 
@@ -69,7 +47,7 @@ class DBManager:
             if state == 'New York' and res_type is not None:
                 myMatch['cuisine_description'] = res_type
             elif state == 'Illinois' and res_type is not None:
-                myMatch['restaurant_type'] = res_type
+                myMatch['restaurant_type'] = res_type.lower()
         if city is not None:
             myMatch['city'] = city.lower()
         print(myMatch)
@@ -84,6 +62,8 @@ class DBManager:
                 "address": 1,
                 "city": 1,
                 "zipcode": 1,
+                "cuisine_description":1,
+                "restaurant_type": 1,
                 "state": 1,
                 "rischia": {
                     "$first": "$violations.risk"
@@ -133,9 +113,63 @@ class DBManager:
                 new.append(x)
 
         return new
+
+
+    @staticmethod
+    def searchrestype(cavia):
+        db = DBManager()
+        db.connect()
+        result=db.db.find({"cuisine_description": cavia})
+        return list(result)
+    
+    
+    @staticmethod
+    def search_bytype(typo):
+        db = DBManager()
+        db.connect()
+        result=db.db.find({"cuisine_description":typo})
+        return list(result)
+    
+    
+    @staticmethod
+    def searchtype():
+        db = DBManager()
+        db.connect()
+        result = db.db.distinct("cuisine_description")
+        return result
+    
+
+    @staticmethod
+    def search_byrisk():
+        db = DBManager()
+        db.connect()
+        result = db.db.find({"violations.0.risk": "Risk 3 (Low)"},{"name":1,"_id":1})
+      
         return result
 
 
+    
+
+
+    @staticmethod
+    def tutte(req):
+        result = DBManager.searchtype()
+        return result
+
+
+    @staticmethod
+    def search_type(req):
+        print("culo")
+        result = DBManager.searchtype()
+        x=random.sample(range(0,len(result)),12)
+        cavia=[]
+
+        for i in x:
+            if i==12 or i==69 or i==50 or i ==48 or i==40 or i==10:
+                cavia.append(result[i+1])
+            else:
+                cavia.append(result[i])
+        return cavia
 
 if __name__=='__main__':
     result = DBManager.filter_restaurants(state = 'New York', risk_order=1)
