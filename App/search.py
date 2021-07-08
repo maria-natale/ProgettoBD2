@@ -25,8 +25,14 @@ class SearchRestaurant:
                 city = None
         
 
-        city_flag = False if session['city_flag'] is None else session['city_flag']
-        cuisine_flag = False if session['cuisine_flag'] is None else session['cuisine_flag']
+        try:
+            city_flag = False if session['city_flag'] is None else session['city_flag']
+        except KeyError:
+            city_flag = False
+        try:
+            cuisine_flag = False if session['cuisine_flag'] is None else session['cuisine_flag']
+        except KeyError:
+            cuisine_flag = False
         print(state)
 
         if state:
