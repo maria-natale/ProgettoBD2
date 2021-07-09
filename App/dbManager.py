@@ -37,7 +37,7 @@ class DBManager:
 
     @staticmethod
     def filter_restaurants(state = None, city = None, 
-        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded'], res_type = None, risk_order = 1):
+        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded'], res_type = None, risk_order = 1, skip = 0, limit = 10):
         db = DBManager()
         db.connect()
         myMatch = {}
@@ -54,6 +54,10 @@ class DBManager:
         result = db.db.aggregate([
             {
                 "$match": myMatch
+            },
+            {
+                "$skip": skip,
+                "$limit": limit
             },
             {
                 "$project": {

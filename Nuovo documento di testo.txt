@@ -1,0 +1,4 @@
+query ricerca per città da 62ms a 1ms
+
+distinct su cuisine da 44 a 0
+ricerca su cuisine da 59 a 3
