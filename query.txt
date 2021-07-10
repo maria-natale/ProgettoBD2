@@ -104,3 +104,17 @@ print(results)
 
 var states = db.ristoranti.distinct('state')
 db.ristoranti.find({state:states[0]}, {name:1, state:1})
+
+
+db.ristoranti.aggregate([
+	{	
+		"$match":{
+			"_id": ObjectId("60e5bb62537fdfbd5b3b9495")
+		}
+	},
+	{
+	"$sort":{
+		"violations.inspection_date": -1
+		}
+	}
+])
