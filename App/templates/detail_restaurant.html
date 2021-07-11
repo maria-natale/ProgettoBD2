@@ -35,7 +35,7 @@
 
   </head>
 
-  
+
   <body>
     <!-- ===============================================-->
     <!--    Main Content-->
@@ -46,7 +46,7 @@
               <div class="container"><a class="navbar-brand d-inline-flex" href="http://127.0.0.1:5000/"><img class="d-inline-block" src="static/img/gallery/logo.svg" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">foodwaGon</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
                 <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
-                  
+
                 </div>
               </div>
             </nav>
@@ -55,8 +55,8 @@
 <!--			<form action = "http://127.0.0.1:5000/filter_restaurants" method="POST"><button class="btn btn-danger" type="submit">Torna Indietro ai Risultati</button></form>-->
 
             <div class="container" style="display:table">
-                <h1 style="margin-top:50px; color: #F17228;" >Name: <b> {{restaurants['name']}} </b> </h1>
-                <h4 style="margin-bottom:50px">Address: {{restaurants['address']}}, {{restaurants['city']}}, {{restaurants['state']}} </h4>
+                <h1 style="margin-top:50px; color: #F17228;" ><b> {{restaurants['name']}} </b> </h1>
+                <h4 style="margin-bottom:50px">{{restaurants['address'].upper()}}, {{restaurants['city'].upper()}}, {{restaurants['state'].upper()}} </h4>
             </div>
 
             <div class="container" style="display:flex;">
@@ -67,29 +67,28 @@
                     <div class="card-body">
 					<span class="entry-title bb-1px padding-bottom-10 header-block-sidebar-search">
                 <i class="fa fa-search-plus txt-primary"></i> ORDINA</span>	</br></br>
-                            <form>
-                                  <b>Ordina</b>
-                                  <div class="form-check">
-                                    {%if session['ordine'] == 1: %}
-                                    <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value=1 checked>
+                            <form action="http://127.0.0.1:5000/filter_violations" method="POST" >
+                                <div class="form-check">
+                                    <input id="id" name="id" type="hidden" value={{restaurants['_id']}}>
+                                    {%if ordine == 1: %}
+                                        <input class="form-check-input" type="radio" name="ordina_data" id="crescente" value=1 checked>
                                     {%else: %}
-                                    <input class="form-check-input" type="radio" name="ordina_rischio" id="basso_alto" value=1 >
+                                        <input class="form-check-input" type="radio" name="ordina_data" id="crescente" value=1>
                                     {% endif %}
-                                    <label class="form-check-label" for="basso_alto">
-                                      Rischio basso - alto
-                                    </label>
-                                  </div>
-                                  <div class="form-check">
-                                    {%if session['ordine'] == -1: %}
-                                    <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value=-1 checked >
+                                        <label class="form-check-label" for="crescente">
+                                            Data crescente
+                                        </label>
+                                 </div>
+                                <div class="form-check">
+                                    {%if ordine == -1: %}
+                                        <input class="form-check-input" type="radio" name="ordina_data" id="decrescente" value=-1 checked>
                                     {%else: %}
-                                    <input class="form-check-input" type="radio" name="ordina_rischio" id="alto_basso" value=-1>
+                                        <input class="form-check-input" type="radio" name="ordina_data" id="decrescente" value=-1>
                                     {% endif %}
-                                    <label class="form-check-label" for="alto_basso">
-                                      Rischio alto - basso
-                                    </label>
-                                  </div>
-                                </br>
+                                        <label class="form-check-label" for="decrescente">
+                                            Data decrescente
+                                        </label>
+                                </div>
                                   <div class="d-grid gap-3 col-sm-auto">
                                     <button class="btn btn-danger" type="submit">Ordina violazioni</button>
                                   </div>
@@ -100,14 +99,42 @@
 
                 <div class="col-md-8 col-xl-8">
                     <h1>Elenco delle violazioni</h1>
-                    {% for r in restaurants['violations']: %}
-                         <div class="row">
-                          <div class="card w-xxl-75">
-                            <div class="card-body">
-                          <form>
-                          <h3 id = "data_ispezione"> Data Ispezione: {{r.inspection_date}}</h3>
-                              <p> <b> Descrizione: </b> {{r.description}}</p>
-                          <p>Rischio: <b>{{r.risk}}</b></p>
+
+                        {% for p in points: %}
+                            <div class="row">
+                              <div class="card w-xxl-75">
+                                  <div class="card-body">
+                              <form>
+                                      {%if session['state'] is not none and session['state'] == 'California' : %}
+                                        <h3 id = "data_ispezione"> Data Ispezione: {{p['violazione']}}</h3>
+                                        <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Points</th>
+                                                        <th scope="col">Violation Status</th>
+                                                    </tr>
+                                                </thead>
+                                        {% for v in p.descrizione: %}
+                                            {%if v != '': %}
+                                                <tbody>
+                                                <tr>
+                                                    <th> {{v}} </th>
+                                                    <td> OUT OF COMPLIANCE </td>
+                                                </tbody>
+                                            {%endif %}
+                                        {% endfor %}
+                                        </table>
+                                    <p>Rischio: <b>{{p['rischio']}}</b></p>
+                            {%else: %}
+                                    <h3 id = "data_ispezione"> Data Ispezione: {{p['violazione']}}</h3>
+                                    {%if p['descrizioneSingola'] != undefined : %}
+                                        <p> <b> Descrizione: </b> {{p['descrizioneSingola']}}</p>
+                                    {%else: %}
+                                        <p> <b> Nessuna descrizione </b></p>
+                                    {%endif %}
+                                    <p>Rischio: <b>{{p['rischio']}}</b></p>
+                            {%endif %}
+
                           </form>
                         </div>
                         </div>
@@ -119,9 +146,9 @@
         </main>
 
 
-    
-    
-    
+
+
+
         <!-- ===============================================-->
         <!--    JavaScripts-->
         <!-- ===============================================-->
@@ -131,13 +158,13 @@
         <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll')}}"></script>
         <script src="{{url_for('static', filename='vendors/fontawesome/all.min.js')}}"></script>
         <script src="{{url_for('static', filename='js/theme.js')}}"></script>
-    
+
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap" rel="stylesheet">
       </body>
       <script>
 		$(document).ready(
 					$(function() {
-						$('input[name="ordina_rischio"]').click(
+						$('input[name="ordina_data"]').click(
 								function() {
 									var $radio = $(this);
 									if ($radio.data('waschecked') == true) {
