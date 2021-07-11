@@ -52,12 +52,19 @@ def create_app(test_config=None):
     def filter():
         return SearchRestaurant.filter_restaurant(request)
 
+    @app.route('/filter_violations', methods=['POST', 'GET'])
+    def filterViolations():
+        return SearchRestaurant.filter_violations(request)
+
     @app.route('/get_information', methods=['POST', 'GET'])
     def getRestaurant():
-        #return SearchRestaurant.get_information(request)
-        id = request.form['id']
+        try:
+            id = request.form['id']
+        except KeyError:
+            id = request.args('valore')
         print(f'Id ristorante: {id}')
-        return render_template('index.html')
+        return SearchRestaurant.get_information(id)
+        #return render_template('detail_restaurant.html')
     
 
     @app.route('/search_restaurant_type', methods=['GET'])

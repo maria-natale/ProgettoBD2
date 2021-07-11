@@ -3,6 +3,7 @@ from flask import Flask,render_template,request,make_response,jsonify
 from bson.json_util import dumps
 from pprint import pprint
 import random
+from bson import ObjectId
 
 class DBManager:
     db = None
@@ -34,6 +35,14 @@ class DBManager:
         print(result)
         return list(result)
     
+    @staticmethod
+    def search_byid(id):
+        db = DBManager()
+        db.connect()
+        result = db.db.find({"_id": id})
+        return list(result)
+
+    
 
     @staticmethod
     def filter_restaurants(state = None, city = None, 
@@ -54,10 +63,6 @@ class DBManager:
         result = db.db.aggregate([
             {
                 "$match": myMatch
-            },
-            {
-                "$skip": skip,
-                "$limit": limit
             },
             {
                 "$project": {
@@ -174,6 +179,29 @@ class DBManager:
             else:
                 cavia.append(result[i])
         return cavia
+
+    
+    @staticmethod
+    def filter_violations(id = None, date_order=-1):
+        db = DBManager()
+        db.connect()
+
+        result = db.db.aggregate([
+                {
+                    "$match": {
+                        "_id": ObjectId(id)
+                    }
+                },
+                {
+                    "$sort": {
+                        "violations.inspection_date": date_order
+                    }
+                }
+        ])
+
+        print(date_order)
+        return list(result)
+
 
 if __name__=='__main__':
     result = DBManager.filter_restaurants(state = 'New York', risk_order=1)

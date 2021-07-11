@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, session
 from flask_paginate import Pagination, get_page_args
 from dbManager import DBManager
 import random
+from bson import ObjectId
 
 class SearchRestaurant:
     ROWS_PER_PAGE = 10
@@ -228,3 +229,69 @@ class SearchRestaurant:
         cavia=request.form['type']
         result=DBManager.searchrestype(str(cavia))
         return render_template('visualize_restaurants.html', value = result)
+
+
+    @staticmethod
+    def get_information(id):
+        db = DBManager()
+        db.connect()
+        objInstance = ObjectId(id)
+        result = db.db.find_one({"_id": objInstance})
+        ordine = -1
+        txt = result['violations']
+        finalArray = []
+
+        for var in txt:
+            lenght = len(var)
+            if lenght == 3:
+                x = var['description'].replace("        points  ...   violation_status", "")
+                x = x[:-20]
+                points = x.replace("  ...  OUT OF COMPLIANCE", "")
+                arreyPoints = points.splitlines()
+                arreyPoints = arreyPoints[1:-1]
+                arrayData = {"violazione" : var['inspection_date'].date(), "descrizione" : arreyPoints, "rischio" : var['risk'], "descrizioneSingola" : var['description']}
+                finalArray.append(arrayData)
+            else:
+                arrayData = {"violazione" : var['inspection_date'].date(), "descrizione" : 'Nessuna descrizione', "rischio" : var['risk'], "descrizioneSingola" : 'Nessuna descrizione'}
+                finalArray.append(arrayData)
+        #print(result)
+        #print(finalArray)
+        return render_template('detail_restaurant.html',
+                               restaurants=result, points=finalArray, ordine=ordine)
+    
+
+
+    @staticmethod
+    def filter_violations(req):
+        idRestaurant = request.form['id']
+
+        try:
+            ordine = request.form['ordina_data']
+        except KeyError:
+            ordine = -1
+
+        result = DBManager.filter_violations(id=idRestaurant, date_order=int(ordine))
+        print(idRestaurant)
+        print(result)
+        result = result[0]
+        txt = result['violations']
+        finalArray = []
+
+        for var in txt:
+            lenght = len(var)
+            if lenght == 3:
+                x = var['description'].replace("        points  ...   violation_status", "")
+                x = x[:-20]
+                points = x.replace("  ...  OUT OF COMPLIANCE", "")
+                arreyPoints = points.splitlines()
+                arreyPoints = arreyPoints[1:-1]
+                arrayData = {"violazione": var['inspection_date'].date(), "descrizione": arreyPoints,
+                             "rischio": var['risk'], "descrizioneSingola": var['description']}
+                finalArray.append(arrayData)
+            else:
+                arrayData = {"violazione": var['inspection_date'].date(), "descrizione": 'Nessuna descrizione',
+                             "rischio": var['risk'], "descrizioneSingola": 'Nessuna descrizione'}
+                finalArray.append(arrayData)
+
+        return render_template('detail_restaurant.html',
+                               restaurants=result, points=finalArray, ordine=int(ordine))
