@@ -61,7 +61,7 @@ def create_app(test_config=None):
         try:
             id = request.form['id']
         except KeyError:
-            id = request.args('valore')
+            id = request.args['valore']
         print(f'Id ristorante: {id}')
         return SearchRestaurant.get_information(id)
         #return render_template('detail_restaurant.html')

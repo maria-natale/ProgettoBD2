@@ -192,6 +192,7 @@ class DBManager:
                         "_id": ObjectId(id)
                     }
                 },
+                { "$unwind": '$violations' },
                 {
                     "$sort": {
                         "violations.inspection_date": date_order

@@ -112,6 +112,7 @@ db.ristoranti.aggregate([
 			"_id": ObjectId("60e5bb62537fdfbd5b3b9495")
 		}
 	},
+	{ $unwind: '$violations' },
 	{
 	"$sort":{
 		"violations.inspection_date": -1

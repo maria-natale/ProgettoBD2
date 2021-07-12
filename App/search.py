@@ -239,8 +239,9 @@ class SearchRestaurant:
         result = db.db.find_one({"_id": objInstance})
         ordine = -1
         txt = result['violations']
+        session['state'] = result['state']
         finalArray = []
-
+        
         for var in txt:
             lenght = len(var)
             if lenght == 3:
@@ -271,15 +272,18 @@ class SearchRestaurant:
             ordine = -1
 
         result = DBManager.filter_violations(id=idRestaurant, date_order=int(ordine))
-        print(idRestaurant)
-        print(result)
-        result = result[0]
-        txt = result['violations']
+        #print(idRestaurant)
+        #print(result)
+        #print(result)
+        #txt = result['violations']
+        #print(type(txt))
         finalArray = []
-
-        for var in txt:
+        #print(txt)
+        for x in result:
+            var = x['violations']
             lenght = len(var)
             if lenght == 3:
+
                 x = var['description'].replace("        points  ...   violation_status", "")
                 x = x[:-20]
                 points = x.replace("  ...  OUT OF COMPLIANCE", "")
@@ -294,4 +298,4 @@ class SearchRestaurant:
                 finalArray.append(arrayData)
 
         return render_template('detail_restaurant.html',
-                               restaurants=result, points=finalArray, ordine=int(ordine))
+                               restaurants=result[0], points=finalArray, ordine=int(ordine))
