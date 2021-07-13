@@ -226,9 +226,30 @@ class SearchRestaurant:
 
     @staticmethod
     def search_by_type(req):
+        risks = ['Risk 1 (High)', 'Risk 2 (Medium)', 'Risk 3 (Low)', 'Not Yet Graded']
         cavia=request.form['type']
         result=DBManager.searchrestype(str(cavia))
-        return render_template('visualize_restaurants.html', value = result)
+        page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+        print(page, per_page, offset)
+        total = len(result)
+        print(total)
+        pagination_res = SearchRestaurant.get_restaurants(result, offset=offset, per_page=per_page)
+        pagination = Pagination(page=page, per_page=per_page, total=total,
+                            css_framework='bootstrap4')
+            
+        session['res_type'] = str(cavia)
+        session['state'] = 'New York'
+        session['city_flag'] = False
+        session['cuisine_flag'] = False
+        print(pagination_res)
+        return render_template('visualize_restaurants.html',
+                           restaurants=pagination_res,
+                           page=page,
+                           per_page=per_page,
+                           pagination=pagination, risks = risks, state = 'New York',
+            res_type = str(cavia), ordine = 1, city_flag = False, cuisine_flag = False)
+    
 
 
     @staticmethod
