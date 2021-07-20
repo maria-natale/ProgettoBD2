@@ -131,6 +131,29 @@ class DBManager:
         result=db.db.find({"cuisine_description": cavia})
         return list(result)
     
+
+    @staticmethod
+    def filter_violations(id = None, date_order=-1):
+        db = DBManager()
+        db.connect()
+
+        result = db.db.aggregate([
+                {
+                    "$match": {
+                        "_id": ObjectId(id)
+                    }
+                },
+                { "$unwind": '$violations' },
+                {
+                    "$sort": {
+                        "violations.inspection_date": date_order
+                    }
+                }
+        ])
+
+        print(date_order)
+        return list(result)
+        
     
     @staticmethod
     def search_bytype(typo):
@@ -156,52 +179,8 @@ class DBManager:
       
         return result
 
-
     
-
-
-    @staticmethod
-    def tutte(req):
-        result = DBManager.searchtype()
-        return result
-
-
-    @staticmethod
-    def search_type(req):
-        print("culo")
-        result = DBManager.searchtype()
-        x=random.sample(range(0,len(result)),12)
-        cavia=[]
-
-        for i in x:
-            if i==12 or i==69 or i==50 or i ==48 or i==40 or i==10:
-                cavia.append(result[i+1])
-            else:
-                cavia.append(result[i])
-        return cavia
-
     
-    @staticmethod
-    def filter_violations(id = None, date_order=-1):
-        db = DBManager()
-        db.connect()
-
-        result = db.db.aggregate([
-                {
-                    "$match": {
-                        "_id": ObjectId(id)
-                    }
-                },
-                { "$unwind": '$violations' },
-                {
-                    "$sort": {
-                        "violations.inspection_date": date_order
-                    }
-                }
-        ])
-
-        print(date_order)
-        return list(result)
 
 
 if __name__=='__main__':
